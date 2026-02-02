@@ -1,0 +1,543 @@
+:root {
+    --primary-color: #2596BE;
+    --primary-dark: #155E75;
+    --accent-orange: #F59E0B;
+    --background-color: #F5F7FA;
+    --text-color: #333333;
+    --text-secondary: #666666;
+    --border-color: #EEEEEE;
+    --shadow-subtle: 0 4px 12px rgba(37, 150, 190, 0.1);
+    --shadow-card: 0 4px 15px rgba(37, 150, 190, 0.15);
+    --shadow-fab: 0 4px 12px rgba(37, 150, 190, 0.4);
+    --radius-card: 16px;
+    --radius-btn: 12px;
+    --header-height: 60px;
+    --font-family: 'Quicksand', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    --spacing-unit: 20px;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    -webkit-tap-highlight-color: transparent;
+}
+
+body {
+    font-family: var(--font-family);
+    background-color: var(--background-color);
+    color: var(--text-color);
+    height: 100vh;
+    overflow: hidden;
+}
+
+/* Splash Screen */
+.splash-screen {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: var(--primary-color);
+    background-image: linear-gradient(135deg, #2596BE 0%, #5BC0EB 100%);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+    transition: opacity 0.5s ease;
+}
+
+.splash-screen.fade-out {
+    opacity: 0;
+    pointer-events: none;
+}
+
+.splash-content {
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.splash-icon {
+    width: 160px;
+    height: 160px;
+    margin-bottom: 25px;
+    border-radius: 35px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    object-fit: cover;
+}
+
+.logo {
+    color: white;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    font-size: 3.5rem;
+    font-weight: 700;
+    /* Bolder as requested */
+    letter-spacing: 1px;
+    text-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    margin: 0;
+}
+
+/* Layout */
+#app {
+    height: 100%;
+    position: relative;
+    overflow-y: auto;
+}
+
+.view {
+    padding-top: var(--header-height);
+    min-height: 100%;
+    padding-bottom: 90px;
+    transition: transform 0.3s ease;
+}
+
+.view.hidden {
+    display: none;
+}
+
+/* Headers */
+.app-header,
+.view-header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: var(--header-height);
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+    display: flex;
+    align-items: center;
+    padding: 0 var(--spacing-unit);
+    z-index: 100;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.02);
+}
+
+.search-container {
+    width: 100%;
+}
+
+#search-input {
+    width: 100%;
+    padding: 12px 20px;
+    border-radius: 25px;
+    border: 1px solid transparent;
+    background: #F0F4F8;
+    font-size: 16px;
+    font-family: var(--font-family);
+    transition: all 0.3s;
+}
+
+#search-input:focus {
+    background: white;
+    border-color: var(--primary-color);
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(37, 150, 190, 0.1);
+}
+
+/* Dashboard List */
+.days-container {
+    padding: var(--spacing-unit);
+}
+
+.month-group {
+    background: transparent;
+    margin-bottom: 25px;
+}
+
+.month-header {
+    padding: 10px 5px;
+    font-weight: 700;
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+    letter-spacing: 1px;
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    opacity: 0.8;
+}
+
+.month-content-wrapper {
+    display: grid;
+    grid-template-rows: 1fr;
+    transition: grid-template-rows 0.3s ease-out;
+}
+
+.month-group.collapsed .month-content-wrapper {
+    grid-template-rows: 0fr;
+}
+
+.month-content {
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+/* Day Card - New Style */
+.day-card {
+    padding: 20px;
+    background: linear-gradient(135deg, #2596BE 0%, #4DADCF 100%);
+    /* Blue gradient */
+    border-radius: var(--radius-card);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    cursor: pointer;
+    box-shadow: var(--shadow-card);
+    color: white;
+    /* White text as requested */
+    border: none;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.day-card:active {
+    transform: scale(0.98);
+}
+
+.day-info h3 {
+    font-size: 1.2rem;
+    font-weight: 700;
+    margin-bottom: 5px;
+}
+
+.day-info p {
+    font-size: 0.95rem;
+    color: rgba(255, 255, 255, 0.9);
+    /* Softer white for secondary text */
+    font-weight: 500;
+    margin: 0;
+}
+
+/* Actions inside Day Card - Adjust for blue background */
+.day-card .card-actions button {
+    color: white;
+    opacity: 0.8;
+    transition: opacity 0.2s;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 50%;
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.day-card .card-actions button:hover,
+.day-card .card-actions button:active {
+    opacity: 1;
+    background: rgba(255, 255, 255, 0.3);
+}
+
+.day-card .card-arrow {
+    font-size: 1.5rem;
+    color: rgba(255, 255, 255, 0.6);
+    margin-left: 10px;
+}
+
+/* Floating Action Button */
+.fab {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background-color: var(--primary-color);
+    color: white;
+    font-size: 36px;
+    border: none;
+    box-shadow: var(--shadow-fab);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    z-index: 200;
+    transition: transform 0.2s;
+}
+
+.fab:active {
+    transform: scale(0.9);
+}
+
+/* Inventory List */
+.inventory-list {
+    padding: 0;
+}
+
+.inventory-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 18px var(--spacing-unit);
+    border-bottom: 1px solid var(--border-color);
+    background: white;
+}
+
+.inventory-item:last-child {
+    border-bottom: none;
+}
+
+.item-name {
+    flex: 1;
+    font-size: 1.05rem;
+    font-weight: 500;
+}
+
+.item-quantity {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.btn-qty {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    border: 2px solid var(--primary-color);
+    background: white;
+    color: var(--primary-color);
+    font-size: 1.2rem;
+    font-weight: 700;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.btn-qty:active {
+    background: var(--primary-color);
+    color: white;
+}
+
+.qty-value {
+    font-weight: 700;
+    font-size: 1.2rem;
+    min-width: 30px;
+    text-align: center;
+    color: var(--primary-dark);
+}
+
+/* Inventory Actions Layout */
+.inventory-actions {
+    display: flex;
+    gap: 15px;
+    margin-top: 20px;
+    padding: 0 var(--spacing-unit);
+    align-items: stretch;
+}
+
+/* Add Custom Item Button */
+#btn-add-custom-item {
+    flex: 1;
+    background: var(--primary-color);
+    color: white;
+    border: none;
+    padding: 16px;
+    border-radius: var(--radius-btn);
+    font-weight: 700;
+    box-shadow: 0 4px 12px rgba(37, 150, 190, 0.3);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 1rem;
+    cursor: pointer;
+}
+
+/* Manage Button */
+.btn-toggle-manage {
+    flex: 1;
+    background: var(--accent-orange);
+    color: white;
+    border: none;
+    padding: 16px;
+    border-radius: var(--radius-btn);
+    font-weight: 700;
+    cursor: pointer;
+    box-shadow: 0 4px 12px rgba(245, 158, 11, 0.3);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+}
+
+.btn-toggle-manage::before {
+    content: '✎';
+    font-size: 1.1rem;
+}
+
+.btn-toggle-manage.active {
+    background: var(--primary-dark);
+    box-shadow: 0 4px 12px rgba(21, 94, 117, 0.3);
+}
+
+.btn-toggle-manage.active::before {
+    content: '✓';
+}
+
+/* Edit Mode Icons */
+.item-manage-controls {
+    display: none;
+    gap: 12px;
+}
+
+.inventory-item.edit-mode .item-manage-controls {
+    display: flex;
+    align-items: center;
+}
+
+.inventory-item.edit-mode .item-quantity {
+    display: none;
+}
+
+.btn-icon-action {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    border: none;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 1.1rem;
+    cursor: pointer;
+    transition: transform 0.1s;
+}
+
+.btn-icon-action:active {
+    transform: scale(0.95);
+}
+
+.btn-edit-item {
+    background: #E0F2FE;
+    color: var(--primary-color);
+}
+
+.btn-delete-item {
+    background: #FEE2E2;
+    color: #EF4444;
+}
+
+/* Modals */
+.modal {
+    border: none;
+    border-radius: 24px;
+    padding: 0;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
+    width: 90%;
+    max-width: 360px;
+    animation: modalPoP 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    margin: auto;
+    position: fixed;
+    inset: 0;
+    max-height: 90vh;
+}
+
+@keyframes modalPoP {
+    from {
+        transform: scale(0.9);
+        opacity: 0;
+    }
+
+    to {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+.modal::backdrop {
+    background: rgba(0, 0, 0, 0.5);
+    /* Darker backdrop to make modal pop */
+    backdrop-filter: blur(4px);
+}
+
+.modal-content {
+    background: white;
+    border-radius: 24px;
+    padding: 30px 24px;
+    text-align: center;
+    font-family: var(--font-family);
+}
+
+.modal h3 {
+    margin-bottom: 20px;
+    color: var(--primary-color);
+    font-size: 1.3rem;
+    font-weight: 700;
+}
+
+#day-form,
+#new-item-form,
+#edit-item-form {
+    text-align: center;
+    /* Center form contents too */
+}
+
+input[type="text"],
+input[type="number"],
+input[type="date"] {
+    font-family: var(--font-family);
+}
+
+.quantity-control {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 25px;
+}
+
+#modal-quantity-input {
+    width: 80px;
+    font-size: 2rem;
+    text-align: center;
+    border: 2px solid var(--border-color);
+    padding: 10px;
+    border-radius: 16px;
+    color: var(--primary-color);
+    font-weight: 700;
+}
+
+.modal-actions {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+    margin-top: 25px;
+}
+
+/* Common Buttons */
+.btn-text {
+    background: transparent;
+    border: none;
+    color: var(--text-secondary);
+    padding: 12px 20px;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 1rem;
+}
+
+.btn-primary {
+    background: var(--primary-color);
+    color: white;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 12px;
+    font-weight: 700;
+    font-size: 1rem;
+    cursor: pointer;
+    box-shadow: 0 4px 10px rgba(37, 150, 190, 0.3);
+}
+
+/* Icon Buttons Small (default, used elsewhere if needed) */
+.btn-icon-small {
+    border: none;
+    background: none;
+    cursor: pointer;
+    font-size: 1.2rem;
+    padding: 5px;
+}

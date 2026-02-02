@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>Snowtel</title>
+
+    <!-- PWA Meta Tags -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Snowtel">
+    <meta name="theme-color" content="#2596BE">
+
+    <link rel="manifest" href="manifest.json">
+    <link rel="stylesheet" href="src/css/style.css">
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@300;400;700&display=swap" rel="stylesheet">
+
+    <!-- Preload critical fonts if any, using system stack for now -->
+</head>
+
+<body>
+    <div id="app">
+        <!-- Splash Screen (Hidden by default after load) -->
+        <!-- Splash Screen (Hidden by default after load) -->
+        <div id="splash-screen" class="splash-screen">
+            <div class="splash-content" style="text-align: center;">
+                <img src="public/icons/snowtellogo2.png " alt="Snowtel Logo" class="splash-icon">
+                <h1 class="logo">Snowtel</h1>
+            </div>
+        </div>
+
+        <!-- Dashboard View -->
+        <div id="dashboard-view" class="view active">
+            <header class="app-header">
+                <div class="search-container">
+                    <input type="text" id="search-input" placeholder="Buscar día..." aria-label="Buscar día">
+                </div>
+            </header>
+
+            <main id="days-list-container" class="days-container">
+                <!-- Days will be injected here -->
+            </main>
+
+            <button id="fab-add-day" class="fab" aria-label="Crear Nuevo Día">+</button>
+        </div>
+
+        <!-- Inventory View (Hidden by default) -->
+        <div id="inventory-view" class="view hidden">
+            <header class="view-header">
+                <button id="btn-back" class="btn-icon" aria-label="Volver">←</button>
+                <h2 id="inventory-title">Día X</h2>
+            </header>
+
+            <main id="inventory-list" class="inventory-list">
+                <!-- Inventory items injected here -->
+            </main>
+
+            <div class="inventory-actions">
+                <button id="btn-add-custom-item" class="btn-secondary">Añadir ítem personalizado</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modals -->
+    <dialog id="quantity-modal" class="modal">
+        <div class="modal-content">
+            <h3 id="modal-item-name">Item Name</h3>
+            <div class="quantity-control">
+                <button id="btn-modal-decrease">-</button>
+                <input type="number" id="modal-quantity-input" value="1" min="0">
+                <button id="btn-modal-increase">+</button>
+            </div>
+            <div class="modal-actions">
+                <button id="btn-modal-cancel" class="btn-text">Cancelar</button>
+                <button id="btn-modal-confirm" class="btn-primary">Confirmar</button>
+            </div>
+        </div>
+    </dialog>
+
+    <!-- Day Edit Modal -->
+    <dialog id="day-modal" class="modal">
+        <div class="modal-content">
+            <h3>Editar Día</h3>
+            <form id="day-form" autocomplete="off">
+                <div style="margin-bottom: 15px; text-align: left;">
+                    <label for="day-number-input" style="display:block; margin-bottom: 5px; color: #666;">Número de
+                        Día</label>
+                    <input type="number" id="day-number-input"
+                        style="width: 100%; padding: 8px; font-size: 1rem; border: 1px solid #ddd; border-radius: 4px;">
+                </div>
+                <div style="margin-bottom: 20px; text-align: left;">
+                    <label for="day-date-input" style="display:block; margin-bottom: 5px; color: #666;">Fecha</label>
+                    <input type="date" id="day-date-input"
+                        style="width: 100%; padding: 8px; font-size: 1rem; border: 1px solid #ddd; border-radius: 4px;">
+                </div>
+                <div class="modal-actions">
+                    <button type="button" id="btn-day-cancel" class="btn-text">Cancelar</button>
+                    <button type="submit" id="btn-day-save" class="btn-primary">Guardar</button>
+                </div>
+            </form>
+        </div>
+    </dialog>
+
+    <!-- Delete Confirmation Modal -->
+    <dialog id="delete-confirm-modal" class="modal">
+        <div class="modal-content">
+            <h3 style="color: #ff4444;">Eliminar Ítem</h3>
+            <p id="delete-confirm-text" style="margin-bottom: 20px; color: #666;">¿Estás seguro de eliminar este ítem de
+                la lista permanente?</p>
+            <div class="modal-actions">
+                <button id="btn-delete-cancel" class="btn-text">Cancelar</button>
+                <button id="btn-delete-confirm" class="btn-primary" style="background-color: #ff4444;">Eliminar</button>
+            </div>
+        </div>
+    </dialog>
+
+    <!-- New Custom Item Modal -->
+    <dialog id="new-item-modal" class="modal">
+        <div class="modal-content">
+            <h3>Nuevo Ítem Personalizado</h3>
+            <form id="new-item-form" method="dialog">
+                <input type="text" id="new-item-input" placeholder="Nombre del ítem" autocomplete="off" required
+                    style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 8px; font-size: 1rem; margin-bottom: 20px;">
+                <div class="modal-actions">
+                    <button type="button" class="btn-text" id="btn-new-item-cancel">Cancelar</button>
+                    <button type="submit" class="btn-primary" id="btn-new-item-confirm">Crear</button>
+                </div>
+            </form>
+        </div>
+    </dialog>
+
+    <!-- Custom Edit Item Modal -->
+    <dialog id="edit-item-modal" class="modal">
+        <div class="modal-content">
+            <h3>Editar Nombre del Ítem</h3>
+            <form id="edit-item-form" method="dialog">
+                <input type="text" id="edit-item-input" placeholder="Nuevo nombre" autocomplete="off" required
+                    style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 8px; font-size: 1rem; margin-bottom: 20px;">
+                <input type="hidden" id="edit-item-original-name">
+                <div class="modal-actions">
+                    <button type="button" class="btn-text" id="btn-edit-item-cancel">Cancelar</button>
+                    <button type="submit" class="btn-primary" id="btn-edit-item-save">Guardar</button>
+                </div>
+            </form>
+        </div>
+    </dialog>
+
+    <script src="src/main.js"></script>
+</body>
+
+</html>
