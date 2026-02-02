@@ -1,4 +1,4 @@
-const CACHE_NAME = 'snowtel-v2';
+const CACHE_NAME = 'snowtel-v3';
 const ASSETS = [
   './',
   './index.html',
