@@ -80,14 +80,28 @@ body {
 }
 
 /* Layout */
+/* Layout */
 #app {
     height: 100%;
     position: relative;
     overflow-y: auto;
 }
 
+/* Status Bar Spacer */
+.status-bar-spacer {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: max(20px, env(safe-area-inset-top));
+    background-color: var(--primary-color);
+    z-index: 1001;
+    /* Above headers */
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
 .view {
-    padding-top: var(--header-height);
+    padding-top: calc(var(--header-height) + max(20px, env(safe-area-inset-top)));
     min-height: 100%;
     padding-bottom: 90px;
     transition: transform 0.3s ease;
@@ -101,7 +115,8 @@ body {
 .app-header,
 .view-header {
     position: fixed;
-    top: 0;
+    top: max(20px, env(safe-area-inset-top));
+    /* Push header below spacer */
     left: 0;
     width: 100%;
     height: var(--header-height);
